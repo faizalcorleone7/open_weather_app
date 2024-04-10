@@ -86,3 +86,38 @@ def compare_data_row_pollution_record_and_location(data_row, pollution_record, l
   expect(location["latitude"]).to eq(location.latitude)
   expect(location["longitude"]).to eq(location.longitude)
 end
+
+def stub_pollution_api_responses(api_key)
+  Location.all.each { |location_record|
+    latitude = location_record.latitude
+    longitude = location_record.longitude
+    stub_request(:get, "http://api.openweathermap.org/data/2.5/air_pollution?appid=#{api_key}&lat=#{latitude}&lon=#{longitude}").to_return(status: 200, body: pollution_response_body(latitude, longitude), headers: { 'Content-Type' => 'application/json' })
+  }
+end
+
+def pollution_response_body(latitude, longitude)
+  {
+    "coord": {
+      "lon": longitude,
+      "lat": latitude
+    },
+    "list": [
+      {
+        "main": {
+          "aqi": 2
+        },
+        "components": {
+          "co": 350.48,
+          "no": 0,
+          "no2": 4.63,
+          "o3": 67.23,
+          "so2": 11.09,
+          "pm2_5": 19.4,
+          "pm10": 24.77,
+          "nh3": 7.66
+        },
+        "dt": 1712618276
+      }
+    ]
+  }.to_json
+end

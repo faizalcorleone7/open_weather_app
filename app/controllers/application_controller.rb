@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
   private
 
   def render_error_api_response(error)
-    #byebug
     render json: {
       error: {
         title: error.title,
@@ -21,7 +20,6 @@ class ApplicationController < ActionController::Base
   end
 
   def render_standard_error(error)
-    #byebug
     render_error_api_response(CustomApiError.new(error.message, 500))
   end
 

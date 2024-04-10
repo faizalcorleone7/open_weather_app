@@ -1,5 +1,6 @@
 require "rails_helper"
 require "json"
+require 'webmock/rspec'
 
 describe Api::V1::PollutionDataController do
   before(:all) do
@@ -12,6 +13,8 @@ describe Api::V1::PollutionDataController do
 
   context "get location pollution data first time" do
     it "should get all the location and initiate jobs" do
+      ENV["api_key"] = "sample_api_key"
+      stub_pollution_api_responses("sample_api_key")
       allow_any_instance_of(ActiveJob::ConfiguredJob).to receive(:perform_later).and_return(true)
       get :list
       expect(response.status).to eq(200)
