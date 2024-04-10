@@ -70,6 +70,7 @@ def stub_locations
   Location.create!(location_data)
   location_file.close
 end
+
 def compare_data_row_pollution_record_and_location(data_row, pollution_record, location)
   expect(data_row["id"]).to eq(pollution_record.id)
   expect(data_row["aqi"]).to eq(pollution_record.aqi)
@@ -119,5 +120,12 @@ def pollution_response_body(latitude, longitude)
         "dt": 1712618276
       }
     ]
+  }.to_json
+end
+
+def not_authenticated_response_body
+  {
+    "cod": 401,
+    "message": "Invalid API key. Please see https://openweathermap.org/faq#error401 for more info."
   }.to_json
 end
